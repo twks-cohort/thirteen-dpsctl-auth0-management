@@ -10,11 +10,11 @@ parameters:
   context:
     description: circleci context for all jobs
     type: string
-    default: twdps-core-labs-team
+    default: cohorts-global
   executor-image:
     description: image to use for local jobs
     type: string
-    default: twdps/circleci-kube-ops:alpine-0.7.0
+    default: twdps/circleci-kube-ops:alpine-edge
 
 on-push-main: &on-push-main
   branches:
@@ -66,14 +66,14 @@ workflows:
           context: << pipeline.parameters.context >>
           filters: *on-push-main
 
-      - deploy-auth0-configuration:
-          name: deploy-prod-tenant-configuration
-          tenant-env: tenant
-          context: << pipeline.parameters.context >>
-          filters: *on-tag-main
+      # - deploy-auth0-configuration:
+      #     name: deploy-prod-tenant-configuration
+      #     tenant-env: tenant
+      #     context: << pipeline.parameters.context >>
+      #     filters: *on-tag-main
 
-      - executor-tools/release:
-          name: release-dpsctl-auth0-configuration
-          context: << pipeline.parameters.context >>
-          shell: op run --env-file tenant.env -- /bin/sh -eo pipefail
-          filters: *on-tag-main
+      # - executor-tools/release:
+      #     name: release-dpsctl-auth0-configuration
+      #     context: << pipeline.parameters.context >>
+      #     shell: op run --env-file tenant.env -- /bin/sh -eo pipefail
+      #     filters: *on-tag-main
