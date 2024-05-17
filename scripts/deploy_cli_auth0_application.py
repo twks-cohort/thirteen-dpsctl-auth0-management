@@ -42,7 +42,7 @@ time.sleep(1)
 
 # write client-secret to secrets store
 # client_secret_result = os.system(f"opw write svc-auth0 {os.environ.get('TENANT')}-{os.environ.get('TENANT_APPLICATION')}-client-secret {response.json()['client_secret']}")
-client_secret_result = os.system(f"op item edit team-thirteen-svc-auth0 --vault cohorts {os.environ.get('TENANT')}-{os.environ.get('TENANT_APPLICATION')}-client-secret[text]={response.json()['client_secret']}")
+client_secret_result = os.system(f"op item edit team-thirteen-svc-auth0 --vault cohorts {os.environ.get('TENANT')}-{os.environ.get('TENANT_APPLICATION')}-client-secret[password]={response.json()['client_secret']}")
 if client_secret_result != 0:
   print("Error writing client secret")
   sys.exit(1)
