@@ -10,6 +10,7 @@ exports.onExecutePostLogin = async (event, api) => {
 
     managementClient.users.get({ id: event.user.user_id })
         .then((userResponse) =>
+            console.log(userResponse)
             userResponse.data.identities.filter((id) => id.provider === "github")[0]
         )
         .then((githubIdentity) => githubIdentity.access_token)
