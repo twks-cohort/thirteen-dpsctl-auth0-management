@@ -9,12 +9,13 @@ exports.onExecutePostLogin = async (event, api) => {
     });
 
     managementClient.users.get({ id: event.user.user_id })
-        .then((userResponse) =>
-            userResponse.data.identities.filter((id) => id.provider === "github")[0]
+        .then((userResponse) => {
+             return userResponse.data.identities.filter((id) => id.provider === "github")[0]
+            }
         )
         .then((githubIdentity) => githubIdentity.access_token)
         .then((githubAccessToken) => {
-            axios.request({
+            return axios.request({
                 url: "https://api.github.com/user/teams",
                 headers: {
                     // use token authorization to talk to GitHub API
@@ -27,7 +28,7 @@ exports.onExecutePostLogin = async (event, api) => {
         })
         // extract GitHub team names to array
         .then((githubTeamsResponse) => {
-            githubTeamsResponse.data.map((team) => team.organization.login + "/" + team.slug);
+            const githubTeams = githubTeamsResponse.data.map((team) => team.organization.login + "/" + team.slug);
             // deny access if not a member of any org teams
 
             if (githubTeams.length === 0) return api.access.deny("Access denied: not a member of any GitHub team in org");
@@ -36,6 +37,7 @@ exports.onExecutePostLogin = async (event, api) => {
             const userRoles = new Set (event.user.app_metadata.roles || []);
             githubTeams.forEach(role => userRoles.add(role))
             // persist the app_metadata update
+            console.log(userRoles)
             api.user.setAppMetadata("roles", userRoles);
         })
         .catch(error => {
