@@ -8,7 +8,7 @@ exports.onExecutePostLogin = async (event, api) => {
         clientSecret: event.secrets.clientSecret
     });
 
-    managementClient.users.get({ id: event.user.user_id })
+    return managementClient.users.get({ id: event.user.user_id })
         .then((userResponse) => {
              return userResponse.data.identities.filter((id) => id.provider === "github")[0]
             }
@@ -38,7 +38,7 @@ exports.onExecutePostLogin = async (event, api) => {
             githubTeams.forEach(role => userRoles.add(role))
             // persist the app_metadata update
             console.log(userRoles)
-            api.user.setAppMetadata("roles", userRoles);
+            return api.user.setAppMetadata("roles", [...userRoles]);
         })
         .catch(error => {
             // report and log error
